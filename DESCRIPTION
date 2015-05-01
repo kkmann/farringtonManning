@@ -1,0 +1,11 @@
+Package: rateDiff
+Type: Package
+Title: Collection of hypothesis tests for rate differences
+Version: 0.1
+Date: 2015-05-01
+Author: Kevin Kunzmann
+Maintainer: Kevin Kuzmann <kunzmann@imbi.uni-heidelberg.de>
+Description: This package provides implementations of hypothesis tests for rate
+    differences currently with special focus on non-inferiority testing.
+License: MIT
+LazyData: TRUE
