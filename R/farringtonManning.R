@@ -1,21 +1,24 @@
 #' @title Farrington-Manning test for rate difference
 #'
-#' @description TODO
+#' @description The Farrington-Manning test for rate differences can be used to
+#'  compare the rate difference of successes between two groups to a preset value.
+#'  It uses an explicite formula for the standard deviation of the test statistic under
+#'  the null hypothesis [1].
 #'
 #' @details The Farrington-Maning test for rate differences test the null hypothesis
 #'  of \deqn{H_{0}: p_{1} - p_{2} = \delta}{H[0]: p[1] - p[2] = \delta} for the "two.sided" alternative
-#'  (or \eqn{\leq}{\le} for the "greater" respectively \eqn{\geq}{\ge} for the "less" alternative).
+#'  (or \eqn{\qeq}{\ge} for the "greater" respectively \eqn{\leq}{\le} for the "less" alternative).
 #'  This formulation allows to specify non-inferiority and superiority
 #'  test in a consistent manner:
 #'  \describe{
 #'      \item{non-inferiority}{for delta < 0 and alternative == "greater" the null hypothesis
-#'      reads \eqn{H_{0}: p_{1} - p_{2} \leq \delta}{H[0]: p[1] - p[2] \le -\delta} and
+#'      reads \eqn{H_{0}: p_{1} - p_{2} \geq \delta}{H[0]: p[1] - p[2] \ge \delta} and
 #'      consequently rejection allows concluding that \eqn{p_1 \geq p_2 + \delta}{p[1] \ge p[2] + \delta}
-#'      i.e. that the rate of success in group one is at worst delta geater than the
-#'      success rate in group two - as delta is negagtive this is equivalent to the success rate of group 1
+#'      i.e. that the rate of success in group one is at least the
+#'      success rate in group two plus delta - as delta is negagtive this is equivalent to the success rate of group 1
 #'      being at worst |delta| smaller than that of group 2.}
 #'      \item{superiority}{for delta >= 0 and alternative == "greater" the null hypothesis
-#'      reads \eqn{H_{0}: p_{1} - p_{2} \leq \delta}{H[0]: p[1] - p[2] \le \delta} and
+#'      reads \eqn{H_{0}: p_{1} - p_{2} \geq \delta}{H[0]: p[1] - p[2] \ge \delta} and
 #'      consequently rejection allows concluding that \eqn{p_1 \geq p_2 + \delta}{p[1] \ge p[2] + \delta}
 #'      i.e. that the rate of success in group one is at least delta greater than the
 #'      success rate in group two.}
@@ -23,10 +26,7 @@
 #'
 #' @param group1 a logical vector of data from group 1, where \code{TRUE} indicates a success
 #' @param group2 a logical vector of data from group 2, where \code{TRUE} indicates a success
-#' @param delta -1 times the rate difference under the null hypothesis, note that the null hypothesis is
-#'  formulated as alternative == "less": group 1 - group 2 >= -delta,
-#'  alernative == "greater": group 1 - group 2 <= -delta and alternative == "two.sided": group 1 - group 2 = -delta.
-#'  This formulation is due to the use in non-su
+#' @param delta the rate difference under the null hypothesis
 #' @param alternative character string indicating the alternative to use, either of
 #'  "two.sided", "less", "greater"
 #' @param alpha the significance level (acceptable error of the first kind),
@@ -95,8 +95,8 @@ farrington.manning <- function(
     res <- list()
     class(res) <- "htest"
     res$null.value  <- c(delta)
-    names(res$null.value) <- c("rate difference (group 1 - group 2) under the null")
-    res$alternative <- alternative # if the risk difference (group1 - group2) is greater than -delta group1 is greater than group2 - delta
+    names(res$null.value) <- c("rate difference (group 1 - group 2)")
+    res$alternative <- alternative
     str <- "Farrington-Manning test for rate differences"
     if (alternative == "greater" & delta < 0) {
         str <- "Non-inferiority test for rates according to Farrington-Manning"
