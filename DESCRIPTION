@@ -1,6 +1,6 @@
-Package: rateDiff
+Package: farringtonManning
 Type: Package
-Title: Collection of hypothesis tests for rate differences
+Title: Testing for rate differences
 Version: 0.1
 Date: 2015-05-01
 Author: Kevin Kunzmann
