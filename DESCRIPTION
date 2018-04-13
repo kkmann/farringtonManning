@@ -1,7 +1,7 @@
 Package: farringtonManning
 Type: Package
 Title: Testing for rate differences
-Version: 0.1
+Version: 0.2
 Date: 2015-05-01
 Author: Kevin Kunzmann
 Maintainer: Kevin Kuzmann <kunzmann@imbi.uni-heidelberg.de>
@@ -9,3 +9,4 @@ Description: This package provides implementations of hypothesis tests for rate
     differences currently with special focus on non-inferiority testing.
 License: MIT
 LazyData: TRUE
+RoxygenNote: 6.0.1

@@ -2,7 +2,7 @@
 #'
 #' @description The Farrington-Manning test for rate differences can be used to
 #'  compare the rate difference of successes between two groups to a preset value.
-#'  It uses an explicite formula for the standard deviation of the test statistic under
+#'  It uses an explicit formula for the standard deviation of the test statistic under
 #'  the null hypothesis [1].
 #'
 #' @details The Farrington-Maning test for rate differences test the null hypothesis
@@ -23,6 +23,10 @@
 #'      i.e. that the rate of success in group one is at least delta greater than the
 #'      success rate in group two.}
 #' }
+#' The confidence interval is always computed as two-sided, but with 1-2\eqn{\alpha} confidence level
+#' in case of a one-sided hypthesis. This means that the lower or upper vound are valid one-sided
+#' confidence bounds at level \eqn{\alpha} in this case.
+#' The confidence interval is constructed by inverting the two-sided test directly.
 #'
 #' @param group1 a logical vector of data from group 1, where \code{TRUE} indicates a success
 #' @param group2 a logical vector of data from group 2, where \code{TRUE} indicates a success
@@ -163,9 +167,25 @@ farrington.manning <- function(
         res$p.value <- p_value_two.sided
     }
 
+    # confidence interval by inversion of two-sided test
+    p_value_two.sided <- function(delta) {
+        z <- get_z(delta)
+        p_value_greater <- 1 - pnorm(z)
+        p_value_less <- pnorm(z)
+        2*min(p_value_less, p_value_greater)
+    }
+
+    alpha_mod <- ifelse(alternative == "two.sided", alpha, 2*alpha)
+    ci_lo <- uniroot(
+      function(delta) p_value_two.sided(delta) - alpha_mod, interval = c(1e-6, res$estimate)
+    )$root
+    ci_hi <- uniroot(
+        function(delta) p_value_two.sided(delta) - alpha_mod, interval = c(res$estimate, 1 - 1e-6)
+    )$root
+
     # confidence interval
-    res$conf.int <- diff_ML + sd_diff_ML_null*c(-qnorm(1 - alpha), qnorm(1 - alpha))
-    attr(res$conf.int, "conf.level") <- 2*alpha
+    res$conf.int <- c(ci_lo, ci_hi)
+    attr(res$conf.int, "conf.level") <- 1 - alpha_mod
 
     return(res)
 }
